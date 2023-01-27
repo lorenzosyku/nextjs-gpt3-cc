@@ -4,6 +4,7 @@ import openai from "../lib/chatgpt";
 
 function ChatBox() {
   const [prompt, setPrompt] = useState("");
+  const [answer, setAnswer] = useState("");
   const generateResponse = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -14,12 +15,15 @@ function ChatBox() {
       },
       body: JSON.stringify({ prompt }),
     });
+
+    const { answer } = await response.json();
+    setAnswer(answer);
   };
   return (
     <div>
-      <form onSubmit={generateResponse} className="p-5 space-x-5">
+      <form onSubmit={generateResponse} className="p-5 flex space-x-5">
         <input
-          className="border-2 border-gray-300 bg-gray-800h-10 pr-16 px-5 rounded-lg focus:outline-none text-sm"
+          className="border-2 flex-1 border-gray-300 bg-gray-800 h-10 pr-16 px-5 rounded-lg focus:outline-none text-sm "
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           type="text"
@@ -32,6 +36,11 @@ function ChatBox() {
           Submit
         </button>
       </form>
+      {answer && (
+        <div className="">
+          <h2>GPT-3: {answer}</h2>
+        </div>
+      )}
     </div>
   );
 }
